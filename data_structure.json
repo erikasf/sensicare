@@ -1,0 +1,125 @@
+// "users" {
+//   user_id: {
+//     type: {
+//       patient: true,
+//       family: false,
+//       caregiver: false
+//     },
+//     name: "",
+//     email: email,
+//     password: password
+//   }
+// }
+
+
+
+
+
+"hospitals": {
+  hospital_id: {
+    name: "name",
+    State: "CA",
+    patients: {
+      
+    }
+  },
+  hospital_id: {
+    name: "name",
+    State: "CA",
+  }  
+}
+    
+
+    
+    
+// People
+"caregivers": {
+  $uid: {
+    hospital_id: $hosptial_id,
+  }
+}
+  
+"family": {
+  $uid: {
+    patient_id: patient_id,
+    hospital_id: $hosptial_id
+  }
+}
+  
+"patients": {
+  $uid : {
+    name: "Kei Oka",
+    age: 26,
+    device_id: "dasd21darql2", 
+    birthday: 197815112,
+    hospital: $uid
+  },
+  $uid : {
+    name: "Kei Oka",
+    age: 54,
+    birthday: 197815112
+    hospital: $uid
+  },
+  $uid : {
+    name: "Kei Oka",
+    age: 54,
+    birthday: 197815112
+    hospital: $uid
+  }
+}    
+        
+    
+"caregiver_shift": {
+  $caregiver_id: {
+    $date: {
+      
+    }
+  }
+}  
+  
+"shift": {
+  $patient_id: {
+    $date: {
+      caregiver: $caregiver_id,
+      start: "12:00",
+      end: "14:00"
+    },
+    $date: {
+      caregiver: $caregiver_id,
+      start: "14:00",
+      end: "18:00"
+    }
+  },
+  $patient_id: {
+    $date: {
+      caregiver: $caregiver_id,
+      start: "12:00",
+      end: "14:00"
+    },
+    $date: {
+      caregiver: $caregiver_id,
+      start: "14:00",
+      end: "18:00"
+    }
+  }
+}
+    
+    
+
+     
+"data": {
+  $patient_id: {
+    data_id: {
+      data: {
+        blood_presure: 43.2
+      },
+      timestamp: 201605072321
+    }
+    data_id: {
+      data: {
+        blood_presure: 43.2
+      },
+      timestamp: 201605072321
+    }
+  }
+}
