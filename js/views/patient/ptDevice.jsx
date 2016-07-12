@@ -8,9 +8,11 @@ class PtDevice extends Component {
   } 
 
   render(){   
+    const { device_id } = this.props.patient
     return (
      <div>
        <h2>Device</h2>
+       <li> device id: { device_id } </li>
      </div>
     )
   }

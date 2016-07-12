@@ -1,0 +1,104 @@
+@menu--padding: 10px 20px;
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 260px;
+  height: 100vh;
+  min-height: 100%;
+  background: -webkit-linear-gradient(#443958 , #4A4D5B); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#443958 , #4A4D58); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#443958 , #4A4D58); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#443958 , #4A4D58); /* Standard syntax (must be last) */
+  color: white;
+  overflow: auto;
+}
+
+.sidebar__inner {
+  width: 90%;
+  margin: 0 auto;
+}
+
+
+//********************
+// Sidebar Profile 
+//********************
+
+.sidebar--profile {
+  //background-color: #4A4D5B;
+  border-bottom: 1px solid lighten(#4A4D5B, 10%);
+  padding: 15px 20px 30px 20px;
+}
+
+.sidebar--profile__container {
+  display: flex;
+}
+
+.sidebar--profile__box {
+  align-items: center;
+  margin: 0px 6% 0px 0px;
+}
+
+.sidebar--profile__name {
+  padding: 20px 0px;
+  .h2();
+}
+
+.sidebar--profile__label {
+  .label();
+  margin-bottom: 5px;
+}
+
+// *************
+// Sidebar Nav
+// *************
+
+.sidebar--nav {
+  min-height: 100%;
+  overflow: scroll;
+  height: 100vh;
+  padding-top: 0px;
+}
+
+.sidebar--nav ul li {
+  margin: 10px 0px;
+  padding: @menu--padding; 
+  .h5();
+}
+
+
+.sidebar--nav ul li:hover {
+  background-color: #666A7D;
+  border-radius: 2px;
+}
+
+.sidebar--nav ul li {
+  color: white;
+}
+
+.sidebar--nav__title {
+  .label();
+  color: lighten(#4A4D5B, 30%);
+  margin: 50px 0px 0px 0px;
+  padding: @menu--padding;
+}
+
+
+.sidebar__logo {
+  height: 60px;
+  flex-grow: 5;
+  display: flex;
+}
+
+.sidebar__logo__image {
+  display: flex;
+  width: 96px;
+  align-items: center;
+}
+
+.sidebar__list {
+  display: flex;
+  align-items: center;
+}

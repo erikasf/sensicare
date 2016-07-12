@@ -4,6 +4,9 @@
 //* @success: function 
 //* @error: function
 
+import cookie from 'react-cookie';
+
+
 export function ajax(options){
   return new Promise(function(resolve, reject){
     $.ajax(options).done(resolve).fail(reject)
@@ -13,36 +16,38 @@ export function ajax(options){
 export function setCookie(user){
   const rememberToken = user.remember_token
   if (typeof rememberToken != undefined && rememberToken != null ){
-    document.cookie = `rt=${rememberToken};`
+    cookie.save('medux_rt', rememberToken, { path: '/' });
   }
-}
-
-export function getCookies(){
-  var pairs = document.cookie.split(";");
-  var cookies = {};
-  for (var i=0; i<pairs.length; i++){
-    var pair = pairs[i].split("=");
-    cookies[pair[0]] = unescape(pair[1]);
-  }
-  return cookies;
 }
 
 export function getRememberTokenFromCookie(){
-  const rememberToken = _getCookies().rt
-  _rememberToken = rememberToken ? rememberToken : ""
-  return _rememberToken
+  return cookie.load('medux_rt')
 }
 
 export function clearCookie(){
-  _deleteAllCookies();
+  cookie.remove('medux_rt', { path: '/' });
 }
 
-function _deleteAllCookies(){
-  var cookies = document.cookie.split(";");
-  for (var i = 0; i < cookies.length; i++) {
-    var cookie = cookies[i];
-    var eqPos = cookie.indexOf("=");
-    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+export function hasSession(auth){
+  if (typeof auth == "undefined"){
+    return false
+  }  
+  const { remember_token } = auth
+  return typeof remember_token != "undefined" 
+}
+
+
+export function generatePath(currentUser){
+  switch (currentUser.user_type) {
+    case "Patient":
+      return `/patients/${currentUser.id}`
+    case "CG":
+      return `/caregivers/${currentUser.id}`
+    case "FamilyMember":
+      return `/family_members/${currentUser.id}`
+    default:
+      return '/error'
   }
 }
+
+

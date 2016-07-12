@@ -1,14 +1,56 @@
 'use strict'
 
+/* React & Redux modules */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { 
+import { push } from 'react-router-redux';
+
+/* Firebase */
+import { firebaseDb, firebaseAuth } from '../firebase/init'
+
+/* Redux action */
+import {
+  currentUser, 
   login,
   signup,
   signout
 } from '../redux/auth/action'
 
-import { firebaseDb, firebaseAuth } from '../firebase/init'
+function hasSession(auth){
+  if (typeof auth == "undefined"){
+    return false
+  }  
+  const { remember_token } = auth
+  return typeof remember_token != "undefined" 
+}
+
+function generatePath(currentUser){
+  switch (currentUser.user_type) {
+    case "Patient":
+      return `/patients/${currentUser.id}`
+    case "CareGiver":
+      return `/caregivers/${currentUser.id}`
+    case "FamilyMember":
+      return `/family_members/${currentUser.id}`
+    default:
+      return '/error'
+  }
+}
+
+
+function validateAccess(currentUser){
+  switch (currentUser.user_type) {
+    case "Patient":
+      return `/patients/${currentUser.id}` == window.location.pathname
+    case "CareGiver":
+      return `/caregivers/${currentUser.id}`
+    case "FamilyMember":
+      return `/family_members/${currentUser.id}`
+    default:
+      return false
+  }
+}
+
 
 class App extends Component {
 
@@ -16,99 +58,72 @@ class App extends Component {
     super(props);
   }
   
-    currentUser(){
-      firebaseAuth.onAuthStateChanged(function(user) {
-        if (user) {
-          user
-          console.log("user logined")
-        } else {
-          // No user is signed in.
-          console.log("No user")
-        }
-      });
-    }
-  
-    getCurrentUser(){
-      return firebaseAuth.currentUser;
-    }
-    
-    componentDidMount() {
-      this.currentUser()
-    }
-  
-    render(){
-      return (
-        <div>
-          {this.props.children}
-        </div>
-      )
-    }
-}
+  componentDidMount() {
+    console.log("----------------------")
+    console.log("App Did mount")
+    this.getCurrentUser()
+    this.redirect()
+  }
 
-// Makes the Redux store available to the connect() calls in the component hierarchy below. Normally, you can’t use connect() without wrapping the root component in <Provider>.
+  componentWillReceiveProps(){
+    if (validateAccess(currentUser)){
+      this.redirect()
+    }
+  }
+
+  isLogined(){
+    const auth = this.props.auth
+  }
+
+  redirect(){
+    const auth = this.props.auth
+    const { isLogin } = this.props.auth
+   
+    if(window.location.pathname != "/" && !hasSession(auth) && isLogin == false){
+      console.log("Not signed in")
+      this.props.dispatch(push("/"))
+    }
+   
+    if(window.location.pathname == "/" && hasSession(auth)
+      && auth.isLogin){
+      this.props.dispatch(push(generatePath(auth)))
+    }
+
+    if (validateAccess(auth)){
+      this.props.dispatch(push(generatePath(auth)))
+    }
+
+  }
+
+  getCurrentUser(){
+    console.log("current user")
+    const { auth } = this.props
+    const { isLogin } = auth
+    console.log(isLogin)
+    console.log(auth)
+    if(hasSession(auth) && isLogin == false){
+     console.log("has session")
+     this.props.dispatch(currentUser(auth.remember_token))
+    }
+
+  }
+
+  render(){
+    const children = React.Children.map(this.props.children, (child)=>{
+      return React.cloneElement(child, ...this.props)
+    })
+
+    return (
+      <div className="body--wrapper">
+        {children}
+      </div>
+    )
+  }
+}
 
 // https://github.com/reactjs/react-redux/blob/master/docs/api.md
 
-
 const mapStateToProps = (state) => ({
-  
+  auth: state.auth
 })
 export default connect(mapStateToProps)(App)
-
-   // <aside class="sidebar dbg">
-   //        <div class="sidebar--wrapper">
-
-   //          <div class="sidebar__logo">
-   //            <div class="logo">
-   //              <img src="" alt="" />
-   //            </div>
-   //            <div class="client-name">
-   //              Hahahah
-   //            </div>
-   //          </div>
-
-   //          <nav class="sidebar--nav dbg">
-   //            <ul>
-   //              <li class="active">
-   //                <a href="">
-   //              	<span>a</span>
-   //                </a>
-   //              </li>
-   //              <li>
-   //                <a href="">
-   //              	<span>b</span>
-   //                </a>
-   //              </li>
-   //              <li>
-   //                <a href="">
-   //                  <span>c</span>
-   //                </a>
-   //              </li>
-   //              <li>
-   //                <a href="">
-   //                  <span>d</span>
-   //                </a>
-   //              </li>
-   //              <li>
-   //                <a href="">
-   //                  <span>e</span>
-   //             	  </a>
-   //              </li>
-   //            </ul>
-   //          </nav>
-
-   //        </div>
-   //      </aside>
-
-   //      <main class="main--panel dbg">
-   //        <header class="main--header">
-   //     	    <nav>
-   //     	      <ul>
-   //     	        <li></li>
-   //     	        <li>Logout</li>
-   //     	      </ul>
-   //     	    </nav>
-   //        </header>
-   //        <div class="container main--content">
-   //        </div>
-   //      </main>

@@ -27,9 +27,9 @@ import Login from './views/login'
 import CgPanel from './views/caregiver/cgPanel'
 import CgIndex from './views/caregiver/cgIndex'
 import CgPatientsList from './views/caregiver/cgPatientsList'
-import CgTrackingMap from './views/caregiver/cgTrackingMap'
+import CgShift from './views/caregiver/cgShift'
 import CgNotification from './views/caregiver/cgNotification'
-
+import CgRegisterPatient from './views/caregiver/cgRegisterPatient'
 
 /* Component - patient */
 
@@ -40,21 +40,17 @@ import PtMemo from './views/patient/ptMemo'
 import PtRecords from './views/patient/ptRecords'
 import PtDevice from './views/patient/ptDevice'
 
+/* Component - Error */
+import error404 from './views/error/error404'
+import error401 from './views/error/error401'
 
+/* Devtool */
 const DevTools = createDevTools(
-    <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
-        <LogMonitor theme="tomorrow" preserveScrollTop={false} />
-          </DockMonitor>
+  <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
+    <LogMonitor theme="tomorrow" preserveScrollTop={false} />
+  </DockMonitor>
 )
 
-
-let initialState = {
-  todos: [{
-  	id: 0,
-  	completed: false,
-  	text: 'Initial todo for demo purposes'
-  }]
-}
 
 // initialize store
 const store = configureStore(DevTools);
@@ -73,9 +69,12 @@ render((
           <Route path="caregivers/:id" component={CgPanel} >
             <IndexRoute component={CgIndex} />
             <Route path="patients" component={CgPatientsList} />
-            <Route path="tracking" component={CgTrackingMap}  />
+            <Route path="tracking" component={CgShift}  />
             <Route path="notifications" component={CgNotification} />
+            <Route path="register_patient" component={CgRegisterPatient} />
+
           </Route>
+
           <Route path="patients/:id" component={PtPanel} >
             <IndexRoute component={PtIndex} />
             <Route path="family" component={PtFamily} />
@@ -83,6 +82,9 @@ render((
             <Route path="records" component={PtRecords} />
             <Route path="device" component={PtDevice} />
           </Route>
+
+          <Route path="not_found" component={error404} />     
+          <Route path="access_error" component={error401} />
         </Route>
       </Router>
     <DevTools />

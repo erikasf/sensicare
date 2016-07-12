@@ -9,11 +9,21 @@
 // Store has to be only one
 // To divide store into small states (userStore, commentStore), use reducer composition
 
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
-import reducer from './reducers'
+import { 
+  applyMiddleware, 
+  combineReducers, 
+  compose, 
+  createStore 
+} from 'redux'
+import reducers from './reducers'
 import logger from 'redux-logger'
+import { browserHistory } from 'react-router'
 import thunkMiddleware from 'redux-thunk';
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { 
+  routerMiddleware, 
+  syncHistoryWithStore, 
+  routerReducer 
+} from 'react-router-redux'
 
 
 //***********
@@ -44,11 +54,11 @@ import DockMonitor from 'redux-devtools-dock-monitor'
 //* middleware
 //*
 //
-let middlewares = [thunkMiddleware];
+let middlewares = [thunkMiddleware, routerMiddleware(browserHistory)];
 
 if (process.env.NODE_ENV !== 'production') {
    let loggerMiddleware = logger();
-   middlewares = [...middlewares, loggerMiddleware];
+   middlewares.push(loggerMiddleware);
 }
 
 let finalCreateStore = compose(
@@ -56,14 +66,11 @@ let finalCreateStore = compose(
 )(createStore)
 
 
-
 export default function configureStore(devtool) {
   return finalCreateStore(
-    reducer,
+    reducers,
     devtool.instrument()
   )
 }
 
-
-// 
 // http://stackoverflow.com/questions/33749759/read-stores-initial-state-in-redux-reducer/33791942#33791942

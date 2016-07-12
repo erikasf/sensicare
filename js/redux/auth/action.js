@@ -1,13 +1,50 @@
 'use strict'
 
 import { firebaseDb, firebaseAuth } from '../../firebase/init'
-import { ajax } from '../util'
 import {
   SIGNUP_ERROR,
   LOGIN_ERROR,
+  LOGIN_SUCCESS,
   SIGNOUT_SUCCESS,
   SIGNOUT_ERROR
 } from './types';
+
+import {
+  postLogin,
+  postSignup,
+  postCurrentUser
+} from './serverRequestHandler'
+
+import {
+  loginParams,
+  currentUserParams
+} from './params'
+
+
+import { push } from 'react-router-redux';
+
+function hasSession(auth){
+  if (typeof auth == "undefined"){
+    return false
+  }  
+  const { remember_token } = auth
+  return typeof remember_token != "undefined" 
+}
+
+
+function generatePath(currentUser){
+  switch (currentUser.user_type) {
+    case "Patient":
+      return `/patients/${currentUser.uuid}`
+    case "CareGiver":
+      return `/caregivers/${currentUser.uuid}`
+    case "FamilyMember":
+      return `/family_members/${currentUser.uuid}`
+    default:
+      return '/'
+  }
+}
+
 
 function recordFromSnapshot(snapshot) {
   let record = snapshot.val();
@@ -15,54 +52,31 @@ function recordFromSnapshot(snapshot) {
   return record;
 }
 
-function userType(user){
-  switch(user.type){
-    case "patient":
-    case "familyMember":
-    default:
+export function currentUser(rememberToken){
+  return (dispatch, getState) => {
+    const data = currentUserParams(rememberToken)
+    postCurrentUser(data).then((res)=>{
+      dispatch({ type: LOGIN_SUCCESS, user: res })
+    }, (error, responseJSON, status)=>{
+      dispatch({ type: LOGIN_ERROR, error: error })
+    })
   }
 }
-
-
-//export function addTodo(text){
-//  return (dispatch, getState) => {
-//    const todos = firebaseDb.ref("todos/keioka")
-//    todos.push().set({
-//      text: text
-//    }, error => {
-//      if (error) {
-//        dispatch({
-//          type: CREATE_TASK_ERROR,
-//          payload: error
-//        })
-//      }
-//    })
-//  }
-//}
-
 
 export function login(email, password){
   return (dispatch, getState) => {
-    firebaseAuth.signInWithEmailAndPassword(email, password).catch(function(error) {
-     dispatch({
-        type: LOGIN_ERROR,
-        payload: error
-      })
-    });
+    const data = loginParams({email: email, password: password})
+    postLogin(data).then((res)=>{
+      dispatch( {type: LOGIN_SUCCESS, user: res} )
+      dispatch( push(generatePath(res)) )
+    }, (error, responseJSON, status)=>{
+      const errorMessage = error.responseJSON || { "messages": "Server might be down temporary."
+ }
+      dispatch({ type: LOGIN_ERROR, error: errorMessage })
+      
+    })
   }
 }
-
-//export function signup(email, password){
-//  return (dispatch, getState) => {
-//    firebaseAuth.createUserWithEmailAndPassword(email, password).catch(function(error) {
-//      console.log("error")
-//      dispatch({
-//        type: SIGNUP_ERROR,
-//        payload: error
-//      })
-//    });
-//  }
-//}
 
 export function signup(email, password){
   return (dispatch, getState) => {
@@ -75,11 +89,7 @@ export function signup(email, password){
       }
     }
 
-    ajax({
-      type: 'POST',
-      url: 'http://localhost:3000/signup',
-      data: data
-    }).then((res)=>{
+    postSignup.then((res)=>{
       dispatch({
         type: SIGNUP_SUCCESS,
         user: res
@@ -94,18 +104,12 @@ export function signup(email, password){
   }
 }
 
-export function signout(){
+export function logout(){
   return (dispatch, getState) => {
-    firebaseAuth.signOut().then(function(){
-      dispatch({
-        type: SIGNOUT_SUCCESS
-      })
-    }, function(error){
-      dispacth({
-        type: SIGNOUT_ERROR,
-        payload: error
-      })
+    dispatch({
+      type: SIGNOUT_SUCCESS
     })
+    dispatch(push("/"))
   }
 }
 

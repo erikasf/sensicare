@@ -1,0 +1,150 @@
+//*************************
+// .card
+//**************************
+
+.card {
+  background: #FFFFFF;
+  border: 1px solid #E2E2E2;
+  box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.11);
+  border-radius: 2px;
+  padding: 20px 3%;
+  margin-top: 20px;
+}
+
+.card__title {
+  padding: 16.5px 0px 28.5px 0px;
+  border-bottom: 1px solid @gray;
+  .h5();
+}
+
+.card--shift {
+  width: 35%;
+  min-height: 300px;
+  float: left;
+}
+
+.card--map {
+  width: 50%;
+  float: right;
+}
+
+.card--graph {
+  margin-top: 30px;
+}
+
+
+.card--md {
+  .md--col--7();
+}
+
+.card--sm {
+  .md--col--4();
+}
+
+.card--clnd {
+  float: left;
+}
+
+.card--shift {
+  float: left;
+}
+
+
+.clear--both {
+  clear: both;
+}
+
+.card--shift__header {
+  border-bottom: 1px solid @dark-gray;
+}
+
+.card--shift__header th {
+  border-bottom: 1px solid @dark-gray;
+  padding: 20px 5px 20px 0px;
+  border-collapse: separate; 
+  border-spacing: 0px;
+  .h6();
+}
+
+.card--shift__table tbody td {
+  padding: 20px 5px;
+  font-size: @font-regular;
+}
+
+.card--shift__header:nth-child(1) {
+  width: 20px;
+}
+
+.card--shift__table {
+  text-align: left;
+  width: 100%;
+  border-collapse: separate; 
+  border-spacing: 0px;
+  font-size: @font-regular;
+}
+
+.card--footer {
+  width: 100%;
+  background-color: @light-gray;
+}
+
+.card__footer {
+  padding: 40px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; 
+}
+
+.card__footer input[type='date'] {
+  padding: 14px;
+  font-size: 14px;
+  border: 1px solid @gray;
+}
+
+.card__footer input[type='time'] {
+  padding: 10px;
+  font-size: 14px;
+}
+
+.card__footer input:focus, .card__footer select:focus {
+  outline: none;
+  border: 1px solid #5D5173;
+}
+
+.card__footer select {
+  background: transparent;
+  width: 68px;
+  margin: 0px 20px;
+  padding: 10px;
+  font-size: 14px;
+  line-height: 1;
+  border: 1px solid @gray;
+  border-radius: 0;
+  height: 50px;
+  -webkit-appearance: none;
+}
+
+.card__form {
+  input[type='text'] { 
+    padding: 14px;
+    font-size: 14px;
+    border: 1px solid @gray;
+  }
+  
+  input:focus, .card__footer select:focus {
+    outline: none;
+    border: 1px solid #5D5173;
+  }
+}
+
+.card__form__label {
+  .label();
+  color: @dark-gray;
+  width: 200px;
+  margin-right: 45px;
+}
+
+.card__form__section {
+  display: block;
+  margin: 20px 0px;
+}

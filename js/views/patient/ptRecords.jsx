@@ -1,18 +1,31 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
-class PtPanel extends Component {
+import { connect } from 'react-redux'
+
+/* Redux */
+import { fetchDeviceData } from '../../redux/patient/actions'
+
+
+class PtRecords extends Component {
   
   constructor(props){
     super(props)
   } 
+
   render(){
-    
+    const records = this.props.patient.healthData.map((record)=>{
+  return (
+    <li>{ record.key }: { record.body } </li>
+  )
+}) 
     return (
      <div>
-       {this.props.children}
+      {records}
      </div>
     )
   }
 }
 
-export default PtPanel
+export default PtRecords
+
+

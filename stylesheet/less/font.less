@@ -1,0 +1,80 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin);
+@import url(https://fonts.googleapis.com/css?family=Raleway:600);
+
+@font-bold:  900;
+@font-norm:  700;
+@font-light: 500;
+
+//Size -> px
+@font-xlarge: 24px;
+@font-large: 16px;
+@font-regular: 14px;
+@font-small: 12px;
+//
+//
+@df-font-color: @black;
+@label: @dark-gray;
+
+body {
+  font-family: cabin;
+  font-weight: @font-norm;
+  color: @df-font-color;
+}
+
+h1,
+.h1 {
+  font-size: @font-xlarge;
+} 
+
+h2,
+.h2 {
+  font-size: @font-xlarge;
+  font-weight: @font-norm;
+}
+
+h3,
+.h3 {
+  font-size: @font-large;
+  font-weight: @font-bold;
+}
+
+h4,
+.h4 {
+  font-size: @font-regular;
+  font-weight: @font-bold;
+}
+
+h5,
+.h5 {
+  font-size: @font-regular;
+  font-weight: @font-light;
+}
+
+h6,
+.h6 {
+  font-size: @font-small;
+  font-weight: @font-bold;
+}
+
+.label {
+  .h6();
+  font-family: Raleway;
+  color: white;
+}
+
+
+.font--form {
+  font-size: @font-regular;
+}
+
+.font--default(){
+  font-size: @font-regular;
+  color: @df-font-color;
+}
+
+.font--header(){
+  font-size: @font-large;
+  font-weight: @font-light;
+  color: @df-font-color;
+  letter-spacing: 0.01em;
+}

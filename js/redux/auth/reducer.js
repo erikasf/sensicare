@@ -1,4 +1,8 @@
-import { setCookie } from '../util'
+import { 
+  setCookie,
+  getRememberTokenFromCookie,
+  clearCookie
+} from '../util'
 // reducer is just return new state 
 
 // Do not
@@ -21,38 +25,37 @@ import { setCookie } from '../util'
 // import todoApp from './reducers'
 // let store = createStore(todoApp)
 //
-const initialState = {}
+
+const initialState = typeof (getRememberTokenFromCookie() != "undefined") ? { remember_token: getRememberTokenFromCookie(), isLogin: false } : null
+
 export default function reducer(previousState = initialState, action){
   switch (action.type) {
 
-//    case 'CREATE_TASK_SUCCESS':
-//      return Object.assign({}, previousState, {
-//        user: [{
-//          key: action.payload.key,
-//          text: action.payload.text
-//        }, ...previousState.todos]
-//      })
-   case "SIGNUP_SUCCESS":
-      setCookie(action.payload.user)
+    case "SIGNUP_SUCCESS":
+      setCookie(action.user)
+
     case "SIGNUP_ERROR":
-      console.log(action.payload.message)
       return previousState
+
     case "LOGIN_SUCCESS":
+      console.log("Login Success")
+      setCookie(action.user)
+      return Object.assign({}, {isLogin: true}, action.user)
 
     case "LOGIN_ERROR":
-      console.log(action.payload.message)
-      return previousState
+      let errorMessage = action.error.messages 
+      clearCookie()
+      return Object.assign({}, previousState, {errorMessage: errorMessage})
 
     case "SIGNOUT_SUCCESS":
-      console.log("Signout")
-      return previousState
-    
+      clearCookie()
+      return Object.assign(previousState, {isLogin: false})
+
     case "SIGNOUT_ERROR":
-      console.log(action.payload.message)
       return previousState
-    
+
     default :
   	  return previousState;
- 
+
   }
 }

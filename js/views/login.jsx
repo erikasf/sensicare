@@ -1,14 +1,41 @@
 'use strict'
 
+/* React & Redux modules */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { 
+import { push } from 'react-router-redux';
+
+/* Firebase */
+import { firebaseDb, firebaseAuth } from '../firebase/init'
+
+/* Redux action */
+import {
+  currentUser, 
   login,
   signup,
   signout
 } from '../redux/auth/action'
 
-import { firebaseDb, firebaseAuth } from '../firebase/init'
+function hasSession(auth){
+  if (typeof auth == "undefined"){
+    return false
+  }  
+  const { remember_token } = auth
+  return typeof remember_token != "undefined" 
+}
+
+function generatePath(currentUser){
+  console.log(currentUser)
+  switch (currentUser.user_type) {
+    case "Patient":
+      return `/patients/${currentUser.id}`
+    case "CareGiver":
+      return `/caregivers/${currentUser.id}`
+    case "FamilyMember":
+      return `/family_members/${currentUser.id}`
+  }
+}
+
 
 class Login extends Component {
 
@@ -31,34 +58,13 @@ class Login extends Component {
     const email = this.refs.s_email.value
     const password = this.refs.s_password.value
     this.props.dispatch(signup(email, password))
+    this.state = {
+      isLogin: this.props.auth.isLogin
+    }
   }
   
   userInfo(name){
     const user = this.getCurrentUser()
-    //firebaseDb.ref(`users/${user.uid}`).set({
-    // name: name
-    //})
-  }
-  
-  update(event){
-    event.preventDefault()
-    const user = this.getCurrentUser()
-    const name = this.refs.name.value
-    const success = function(){
-      console.log("update success")
-      console.log(user.name)
-      this.userInfo(name)
-      console.log(user)
-    }.bind(this)
-  
-    const error =  function(error){
-      console.log(`update error: ${error}`)
-    }
-  
-    user.updateProfile({
-      name: "Kei"
-    }).then(success, error)
-  
   }
 
   signout(){
@@ -67,27 +73,26 @@ class Login extends Component {
   
   render(){
     return (
-      <div class="body--wrapper">
-        <h3>Signin</h3>
-        <form onSubmit={this.signup}>
-          <input type="text" ref="s_email" />
-          <input type="text" ref="s_password" />
-          <input type="submit" />
-        </form>
-        <h3>Login</h3>
-        <form onSubmit={this.login}>
+      <div className="login-container">
+        <form className="form-auth" onSubmit={this.login}>
+          <h3 className="h2"><img src="/img/soteria.png" alt="" className="form--auth__logo"/></h3>
+          <span className="label">EMAIL</span>
           <input type="text" ref="l_email" />
+          <span className="label">PASSWORD</span>
           <input type="text" ref="l_password" />
-          <input type="submit" />
-        </form>
-        <button onClick={this.signout}>Sign Out</button>
-      </div>
+          <p>Don't have account? you</p>
+          { this.props.auth.errorMessage && <h5 className="form--auth__error">{ this.props.auth.errorMessage }</h5> }
 
+          <input type="submit" className="btn--form" value="LOGIN"/>
+        </form>
+      </div>
    )
   }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+  auth: state.auth
+})
 
 export default connect(mapStateToProps)(Login)
 
