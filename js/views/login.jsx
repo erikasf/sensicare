@@ -48,15 +48,15 @@ class Login extends Component {
  
   login(event){
     event.preventDefault()
-    const email = this.refs.l_email.value
-    const password = this.refs.l_password.value
+    const email = this.refs.login_email.value
+    const password = this.refs.login_password.value
     this.props.dispatch(login(email, password))
   }
   
   signup(event){
     event.preventDefault()
-    const email = this.refs.s_email.value
-    const password = this.refs.s_password.value
+    const email = this.refs.signup_email.value
+    const password = this.refs.signup_password.value
     this.props.dispatch(signup(email, password))
     this.state = {
       isLogin: this.props.auth.isLogin
@@ -77,10 +77,9 @@ class Login extends Component {
         <form className="form-auth" onSubmit={this.login}>
           <h3 className="h2"><img src="/img/soteria.png" alt="" className="form--auth__logo"/></h3>
           <span className="label">EMAIL</span>
-          <input type="text" ref="l_email" />
+          <input type="text" ref="login_email" />
           <span className="label">PASSWORD</span>
-          <input type="text" ref="l_password" />
-          <p>Don't have account? you</p>
+          <input type="text" ref="login_password" />
           { this.props.auth.errorMessage && <h5 className="form--auth__error">{ this.props.auth.errorMessage }</h5> }
 
           <input type="submit" className="btn--form" value="LOGIN"/>

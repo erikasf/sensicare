@@ -44,19 +44,29 @@ import PtDevice from './views/patient/ptDevice'
 import error404 from './views/error/error404'
 import error401 from './views/error/error401'
 
+
+/********************/
+/* Development      */
+/********************/
+
+let DevTools;
+
 /* Devtool */
-const DevTools = createDevTools(
-  <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
-    <LogMonitor theme="tomorrow" preserveScrollTop={false} />
-  </DockMonitor>
-)
+if (process.env.NODE_ENV != "production"){
+  DevTools = createDevTools(
+    <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
+      <LogMonitor theme="tomorrow" preserveScrollTop={false} />
+    </DockMonitor>
+  )
+}
 
 
 // initialize store
-const store = configureStore(DevTools);
+const store = DevTools ? configureStore(DevTools) : configureStore();
 
 // bind hisotry to redux
 const history = syncHistoryWithStore(browserHistory, store)
+
 
 render((
   <Provider store={store}>	
@@ -72,7 +82,6 @@ render((
             <Route path="tracking" component={CgShift}  />
             <Route path="notifications" component={CgNotification} />
             <Route path="register_patient" component={CgRegisterPatient} />
-
           </Route>
 
           <Route path="patients/:id" component={PtPanel} >

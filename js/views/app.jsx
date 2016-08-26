@@ -59,8 +59,6 @@ class App extends Component {
   }
   
   componentDidMount() {
-    console.log("----------------------")
-    console.log("App Did mount")
     this.getCurrentUser()
     this.redirect()
   }
@@ -80,7 +78,6 @@ class App extends Component {
     const { isLogin } = this.props.auth
    
     if(window.location.pathname != "/" && !hasSession(auth) && isLogin == false){
-      console.log("Not signed in")
       this.props.dispatch(push("/"))
     }
    
@@ -96,13 +93,9 @@ class App extends Component {
   }
 
   getCurrentUser(){
-    console.log("current user")
     const { auth } = this.props
     const { isLogin } = auth
-    console.log(isLogin)
-    console.log(auth)
     if(hasSession(auth) && isLogin == false){
-     console.log("has session")
      this.props.dispatch(currentUser(auth.remember_token))
     }
 
@@ -120,8 +113,6 @@ class App extends Component {
     )
   }
 }
-
-// https://github.com/reactjs/react-redux/blob/master/docs/api.md
 
 const mapStateToProps = (state) => ({
   auth: state.auth

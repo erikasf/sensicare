@@ -1,15 +1,12 @@
 var webpack   = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
 var path      = require('path');
 var moment    = require('moment');
 
 
 module.exports = {
-  devtool: 'eval',
+  name: "production",
   entry: [
-   'webpack-dev-server/client?http://localhost:8080',
-   'webpack/hot/only-dev-server', 
-   './js/index.jsx'
+   './js/index'
   ],
   output: {
     path: require("path").resolve("./build"),
@@ -17,8 +14,6 @@ module.exports = {
     publicPath: '/'
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
     new webpack.optimize.UglifyJsPlugin(), 
     new webpack.ProvidePlugin({
       'React': 'react',
@@ -27,6 +22,9 @@ module.exports = {
       'Moment': 'moment',
       '_': 'underscore',
       'underscore': 'underscore'
+    }),
+    new webpack.DefinePlugin({
+      NODE_ENV: JSON.stringify("production")
     })
   ],
   module: {
@@ -58,13 +56,5 @@ module.exports = {
   },
   resolveLoader: {
     fallback: path.resolve(__dirname, './node_modules')
-  },
-  devServer: {
-    contentBase: "./",
-    port: 8080,
-    inline: true,
-    historyApiFallback: true,
-    colors: true,
-    stats: 'normal',
   },
 }
